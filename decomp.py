@@ -1,9 +1,5 @@
 
 
-RESERVED_WORDS = ["ANY", "CONTEXT", "IGNORE", "PRAGMAS", "TOKENS",\
-    "CHARACTERS", "END", "IGNORECASE", "PRODUCTIONS", "WEAK", "COMMENTS", \
-        "FROM", "NESTED", "SYNC", "COMPILER", "IF", "out", "TO"]
-
 COMMENTS = ["/*", "*/", "//"]
 
 def read_word(file, actual):
@@ -44,17 +40,8 @@ def main(file):
             else:
                 print("No coincide el nombre")
                 break
-
-    print("nombre del compilador: ", name)
-    print("caracteres validos: ")
-    for c in characters:
-        print(c, ": ", characters[c])
-    print("keywords")
-    for k in keywords:
-        print(k, ": ", keywords[k])
-    print("tokens")
-    for t in tokens:
-        print(t, ": ", tokens[t])
+    
+    return name, characters, keywords, tokens
 
 def COMPILER(file, actual):
     actual += 1 
