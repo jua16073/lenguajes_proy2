@@ -21,12 +21,15 @@ def analyze(name, characters, keywords, tokens):
     #print(keyword_parse_lines)
     token_parse_lines = TOKENS(tokens, character_parse_lines)
     #print(token_parse_lines)
-    tree, complete_parse_line = make_tree(keyword_parse_lines, token_parse_lines)
+    dfas, complete_line = make_tree(keyword_parse_lines, token_parse_lines)
     # Hacer automata
-    dfa = directo.directo(tree, complete_parse_line)
-    graph.graph(dfa, "pls")
+    #dfa = directo.directo(tree, complete_parse_line)
+    final_dfa = make_one(dfas, complete_line)
+    #graph.graph(final_dfa, "nani")
+    #resp = evaluate.is_in_language(final_dfa, "nani")
 
-    print(evaluate.is_in_language(dfa, "nani69"))
+    return final_dfa, dfas
+
 
 
 def CHARACTERS(characters):
@@ -108,12 +111,20 @@ def TOKENS(tokens, characters):
 
 def make_tree(keyword_parse_lines, token_parse_lines):
     complete_line = ""
+    dfas = {}
     for keyword in keyword_parse_lines:
         complete_line += "(" + keyword_parse_lines[keyword] + ")" + "|"
+        tree = trees.evaluate(keyword_parse_lines[keyword])
+        dfas[keyword] = directo.directo(tree, keyword_parse_lines[keyword])
     for token in token_parse_lines:
         complete_line += "(" + token_parse_lines[token] +")" + "|"
+        tree = trees.evaluate(token_parse_lines[token])
+        dfas[token] = directo.directo(tree, token_parse_lines[token])
     complete_line = complete_line[:-1]
-    print(complete_line)
-    print(complete_line)
     tree = trees.evaluate(complete_line)
-    return tree, complete_line
+    return dfas, complete_line
+
+def make_one(dfas, complete_line):
+    tree = trees.evaluate(complete_line)
+    final_dfa = directo.directo(tree, complete_line)
+    return final_dfa
