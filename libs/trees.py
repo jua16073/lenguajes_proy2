@@ -1,6 +1,6 @@
 #Para hacer trees
 
-OPERATORS = ['|', '*', '+', '?', '.', ')', '(']
+OPERATORS = ['|', '*', '+', '?', 'ξ', ')', '(']
 UNITARY = ['*', '+', '?']
 class Tree(object):
     def __init__(self):

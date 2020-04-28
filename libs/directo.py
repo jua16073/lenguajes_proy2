@@ -6,13 +6,13 @@ from libs import dfa_set as dfa
 from libs import evaluate as eval
 import collections
 
-OPERATORS = ['|', '*', '+', '?', '.', ')', '(']
+OPERATORS = ['|', '*', '+', '?', 'ξ', ')', '(']
 EPSILON = "ε"
 
 # Preparacion para crear un automata directo de un arbol sintactico
 def directo(tree, exp):
     new_tree = trees.Tree()
-    new_tree.data = "."
+    new_tree.data = "ξ"
     right_t = trees.Tree()
     right_t.data = "#"
     new_tree.right = right_t
@@ -92,7 +92,7 @@ def estados_importantes(tree):
 def nullable(tree):
     if tree.data == EPSILON:
         return True
-    elif tree.data == ".":
+    elif tree.data == "ξ":
         if nullable(tree.left) and nullable(tree.right):
             return True
     elif tree.data == "*":
@@ -126,7 +126,7 @@ def first_pos(tree):
             temp1 = first_pos(tree.left)
             for num in temp1:
                 pos.append(num)
-        elif tree.data == ".":
+        elif tree.data == "ξ":
             temp1 = first_pos(tree.left)
             for num in temp1:
                 pos.append(num)
@@ -161,7 +161,7 @@ def last_pos(tree):
             temp1 = last_pos(tree.left)
             for num in temp1:
                 pos.append(num)
-        elif tree.data == ".":
+        elif tree.data == "ξ":
             temp1 = last_pos(tree.right)
             if nullable(tree.right):
                 temp2 = last_pos(tree.left)
@@ -184,7 +184,7 @@ def last_pos(tree):
 # Llenado del diccionario con las siguientes posiciones
 #  de cada estado importante
 def followpos(tree, table):
-    if tree.data == ".":
+    if tree.data == "ξ":
         temp1 = last_pos(tree.left)
         temp2 = first_pos(tree.right)
         for i in temp1:

@@ -52,7 +52,7 @@ def CHARACTERS(characters):
             elif flag:
                 temp_string += characters[c][i] + "|"
             elif characters[c][i] == "+":
-                string_to_parse += "."
+                string_to_parse += "ξ"
             elif temp_string + characters[c][i] in character_parse_line:
                 string_to_parse += character_parse_line[temp_string+characters[c][i]]
                 temp_string = ""
@@ -77,7 +77,7 @@ def KEYWORDS(keywords, character_parse_line):
                 else:
                     temp += "("
             else:
-                temp += word[i] + "."
+                temp += word[i] + "ξ"
             i += 1
         keyword_parse_lines[k] = temp
     return(keyword_parse_lines)
@@ -100,7 +100,7 @@ def TOKENS(tokens, characters):
                 temp = ""
             if temp == "{":
                 flag = not flag
-                parse_line += ".("
+                parse_line += "ξ("
                 temp = ""
             if temp == "}" and flag:
                 flag = not flag
