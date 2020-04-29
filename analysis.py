@@ -16,7 +16,7 @@ EPSILON  = "ε"
 def analyze(name, characters, keywords, tokens):
     print("analizando para ", name)
     character_parse_lines = CHARACTERS(characters)
-    #print(character_parse_lines)
+    print(character_parse_lines)
     keyword_parse_lines = KEYWORDS(keywords, character_parse_lines)
     #print(keyword_parse_lines)
     token_parse_lines = TOKENS(tokens, character_parse_lines)
@@ -56,10 +56,25 @@ def CHARACTERS(characters):
             elif temp_string + characters[c][i] in character_parse_line:
                 string_to_parse += character_parse_line[temp_string+characters[c][i]]
                 temp_string = ""
+            elif temp_string == "CHR(":
+                number = ""
+                while i < len(characters[c]):
+                    if characters[c][i] == ")":
+                        break
+                    elif characters[c][i] == " ":
+                        pass
+                    else:
+                        number += characters[c][i]
+                    i += 1
+                print(number)
+                number = int(number)
+                symbol = chr(number)
+                string_to_parse += symbol
+                temp_string = ""
             else:
                 temp_string += characters[c][i]
             i += 1
-        character_parse_line[c] = string_to_parse
+        character_parse_line[c] = "(" +  string_to_parse + ")"
     return character_parse_line
 
 def KEYWORDS(keywords, character_parse_line):
@@ -97,6 +112,9 @@ def TOKENS(tokens, characters):
                     parse_line += characters[temp] + ")*"
                 else:
                     parse_line += characters[temp]
+                temp = ""
+            if "|" == temp:
+                parse_line = parse_line[:-2] + "|"
                 temp = ""
             if temp == "{":
                 flag = not flag

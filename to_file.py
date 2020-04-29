@@ -57,6 +57,34 @@ def create(dfa, extras, name):
     output.write("          actual += 1\n")
     output.write("  return temp_word, actual\n\n")
 
+
+# def word_break(word, words, i = 0, inicial = ""):
+#     value = Falses
+#     temp = ""
+#     while i < len(word):
+#         temp += word[i] 
+#         if temp in words:
+#             value = True
+#             if i == len(word)-1:
+#                 print(inicial + " " + temp)
+#                 return
+#             else:
+#                 word_break(word, words, i+1, inicial+ " " +temp)
+#         i += 1
+#     return value
+
+    output.write("def word_break(file, automata0, actual = 0):\n")
+    output.write("  temp = ''\n")
+    output.write("  validos = []\n")
+    output.write("  while actual < len(file):\n")
+    output.write("      temp += file[actual]\n")
+    output.write("      if is_in_language(automata0, temp):\n")
+    output.write("          validos.append(temp)\n")
+    output.write("      actual += 1\n")
+    output.write("  if validos:\n")
+    output.write("      return max(validos, key = len)\n")
+    output.write("  return False\n")
+
     
     
     output.write("def main():\n")
@@ -72,17 +100,25 @@ def create(dfa, extras, name):
     output.write("  prueba.close()\n")
     
     output.write("  i = 0\n")
+    output.write("  last = 0\n")
     output.write("  while i < len(data):\n")
-    output.write("      word, i = read_word(data, i)\n")
-    output.write("      if is_in_language(automata0, word):\n")
+    output.write("      valid = word_break(data, automata0, i)\n")
+    output.write("      if valid:\n")
+    output.write("          if last != 0 and (i - last > 0):\n")
+    output.write("              while last < i:\n")
+    output.write("                  print(data[last], end='')\n")
+    output.write("                  last += 1\n")
+    output.write("              print(': False')\n")
+    output.write("          last += len(valid)\n")
     output.write("          aut = 1\n")
     output.write("          while aut<len(automatas):\n")
-    output.write("              if is_in_language(automatas[aut], word):\n")
-    output.write("                  print(word, ': ', automatas[aut].id)\n")
+    output.write("              if (is_in_language(automatas[aut], valid)):\n")
+    output.write("                  print(valid, ': ', automatas[aut].id)\n")
     output.write("                  break\n")
-    output.write("              aut += 1\n")
-    #output.write("      print(word,': ', is_in_language(automata0, word))\n")
-    output.write("      i += 1\n")
+    output.write('              aut += 1\n')
+    output.write("          i += len(valid)\n")
+    output.write("      else:\n")
+    output.write("          i+=1\n")
     output.write('if __name__ == "__main__":\n'+'   main()')
 
     output.close()
@@ -99,3 +135,17 @@ def write_automata(automata,i, file, name = "completo"):
         file.write("  automata"+str(i)+".states.append(temp_node)\n")
     file.write("  automatas.append(automata"+str(i)+")\n")
     file.write("\n")
+
+
+    # output.write("#  while i < len(data):\n")
+    # output.write("#      word, i = read_word(data, i)\n")
+    # output.write("#      if is_in_language(automata0, word):\n")
+    # output.write("#          aut = 1\n")
+    # output.write("#          while aut<len(automatas):\n")
+    # output.write("#              if is_in_language(automatas[aut], word):\n")
+    # output.write("#                  print(word, ': ', automatas[aut].id)\n")
+    # output.write("#                  break\n")
+    # output.write("#              aut += 1\n")
+    # output.write("#      else:\n")
+    # output.write("#          print(word, ': ', False)\n")
+    # output.write("#      i += 1\n")

@@ -5,7 +5,7 @@ import analysis
 import to_file
 
 def main():
-    input_file = open("./inputs/file.txt")
+    input_file = open("./inputs/Aritmetica.ATG")
     data = input_file.read()
     input_file.close()
     name, characters, keywords, tokens = decomp.main(data)
