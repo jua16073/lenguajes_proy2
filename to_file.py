@@ -95,7 +95,9 @@ def create(dfa, extras, name):
     for automata in extras:
         write_automata(extras[automata], i, output, automata)
         i += 1
-    output.write("  prueba = open('./outputs/prueba.txt')\n")
+    output.write("  print('archivo a revisar?')\n")
+    output.write("  archivo = input()\n")
+    output.write("  prueba = open('./pruebas/'+archivo)\n")
     output.write("  data = prueba.read()\n")
     output.write("  prueba.close()\n")
     

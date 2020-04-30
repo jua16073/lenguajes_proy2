@@ -14,13 +14,13 @@ RESERVED_WORDS = ["ANY", "CONTEXT", "IGNORE", "PRAGMAS", "TOKENS",\
 EPSILON  = "ε"
 
 def analyze(name, characters, keywords, tokens):
-    print("analizando para ", name)
+    #print("analizando para ", name)
     character_parse_lines = CHARACTERS(characters)
     #print(character_parse_lines)
     keyword_parse_lines = KEYWORDS(keywords, character_parse_lines)
     #print(keyword_parse_lines)
     token_parse_lines = TOKENS(tokens, character_parse_lines)
-    print(token_parse_lines)
+    #print(token_parse_lines)
     dfas, complete_line = make_tree(keyword_parse_lines, token_parse_lines)
     # Hacer automata
     #dfa = directo.directo(tree, complete_parse_line)
@@ -66,7 +66,6 @@ def CHARACTERS(characters):
                     else:
                         number += characters[c][i]
                     i += 1
-                print("chr("+number+")")
                 number = int(number)
                 symbol = chr(number)
                 string_to_parse += "'"+symbol+"'"
@@ -125,19 +124,17 @@ def TOKENS(tokens, characters):
                 temp = ""
             if temp == '"':
                 inner = ""
-                print(token)
                 i += 1
                 while i < len(token):
                     if token[i] == '"':
                         break
                     inner += token[i]
-                    print(inner)
                     i += 1
-                if parse_line != "":
+                if parse_line != "" :
                     parse_line += "ξ(" + inner + ")"
                 else:
                     parse_line += "(" + inner + ")"
-                if token[i + 1] != "":
+                if token[i + 1] != "" and token[i + 1] != "\n" and token[i + 1] != ".":
                     parse_line += "ξ"
                 temp = ""
             i += 1

@@ -1428,7 +1428,9 @@ def main():
   automata5.states.append(temp_node)
   automatas.append(automata5)
 
-  prueba = open('./outputs/prueba.txt')
+  print('archivo a revisar?')
+  archivo = input()
+  prueba = open('./pruebas/'+archivo)
   data = prueba.read()
   prueba.close()
   i = 0
