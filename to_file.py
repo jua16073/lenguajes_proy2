@@ -58,21 +58,6 @@ def create(dfa, extras, name):
     output.write("  return temp_word, actual\n\n")
 
 
-# def word_break(word, words, i = 0, inicial = ""):
-#     value = Falses
-#     temp = ""
-#     while i < len(word):
-#         temp += word[i] 
-#         if temp in words:
-#             value = True
-#             if i == len(word)-1:
-#                 print(inicial + " " + temp)
-#                 return
-#             else:
-#                 word_break(word, words, i+1, inicial+ " " +temp)
-#         i += 1
-#     return value
-
     output.write("def word_break(file, automata0, actual = 0):\n")
     output.write("  temp = ''\n")
     output.write("  validos = []\n")

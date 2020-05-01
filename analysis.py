@@ -113,6 +113,19 @@ def KEYWORDS(keywords, character_parse_line):
         keyword_parse_lines[k] = temp
     return(keyword_parse_lines)
 
+def word_break(line, characters, actual = 0, inicial = ""):
+    temp = inicial
+    actual += 1
+    validos = [inicial]
+    while actual < len(line):
+        temp += line[actual]
+        if temp in characters:
+            validos.append(temp)
+        actual += 1
+    print(max(validos, key=len))
+    return max(validos, key = len)
+
+
 def TOKENS(tokens, characters):
     print("analizando TOKENS")
     tokens_parse_lines = {}
@@ -124,8 +137,11 @@ def TOKENS(tokens, characters):
         flag = False
         while i < len(token):
             temp += token[i]
-            print(temp)
             if temp in characters:
+                og = temp
+                temp = word_break(token, characters, i, temp)
+                if og != temp:
+                    i += len(temp) - len(og)
                 if flag:
                     parse_line += characters[temp] + ")*"
                 else:
@@ -166,6 +182,12 @@ def TOKENS(tokens, characters):
                 if token[i + 1] != "" and token[i + 1] != "\n" and token[i + 1] != ".":
                     parse_line += "ξ"
                 temp = ""
+            if temp == "(":
+                parse_line += "("
+                temp = ""
+            if temp == ")":
+                parse_line += ")"
+                temp = ""
             i += 1
         if parse_line[-1] in OPERATORS:
             parse_line = parse_line[:-1]
@@ -182,7 +204,7 @@ def make_tree(keyword_parse_lines, token_parse_lines):
         dfas[keyword] = directo.directo(tree, keyword_parse_lines[keyword])
     for token in token_parse_lines:
         complete_line += "(" + token_parse_lines[token] +")" + "|"
-        print(token, ": ", token_parse_lines[token])
+        #print(token, ": ", token_parse_lines[token])
         tree = trees.evaluate(token_parse_lines[token])
         #trees.print2DUtil(tree, 0)
         dfas[token] = directo.directo(tree, token_parse_lines[token])
