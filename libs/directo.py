@@ -6,7 +6,7 @@ from libs import dfa_set as dfa
 from libs import evaluate as eval
 import collections
 
-OPERATORS = ['|', '*', '+', '?', 'ξ', ')', '(']
+OPERATORS = ['|', '*', 'ψ', '?', 'ξ', ')', '(']
 EPSILON = "ε"
 
 # Preparacion para crear un automata directo de un arbol sintactico
@@ -102,7 +102,7 @@ def nullable(tree):
             return True
         else:
             return False
-    elif tree.data == "+":
+    elif tree.data == "ψ":
         if nullable(tree.left):
             return True
         else:
@@ -134,7 +134,7 @@ def first_pos(tree):
                 temp2 = first_pos(tree.right)
                 for num in temp2:
                     pos.append(num)
-        elif tree.data == "+":
+        elif tree.data == "ψ":
             temp1 = first_pos(tree.left)
             for num in temp1:
                 pos.append(num)
@@ -169,7 +169,7 @@ def last_pos(tree):
                     pos.append(num)
             for num in temp1:
                 pos.append(num)
-        elif tree.data == "+":
+        elif tree.data == "ψ":
             temp1 = last_pos(tree.left)
             for num in temp1:
                 pos.append(num)
@@ -196,7 +196,7 @@ def followpos(tree, table):
         for i in temp1:
             for num in temp2:
                 table[i].append(num)
-    elif tree.data == "+":
+    elif tree.data == "ψ":
         temp1 = last_pos(tree.left)
         temp2 = first_pos(tree.left)
         for i in temp1:

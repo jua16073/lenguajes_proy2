@@ -49,6 +49,7 @@ def COMPILER(file, actual):
     return name, actual
 
 def CHARACTERS(file, actual):
+    print("leyendo CHARACTERS")
     actual += 1
     temp = ""
     characters = {}
@@ -61,11 +62,12 @@ def CHARACTERS(file, actual):
             actual -= 8
             break
         line += temp
-        if line[-1] == ".":
+        if line[-1] == "." and line[-2] != ".":
             if "=" in line:
                 completo = line.split("=")
                 temp_id = completo[0]
                 temp_values = completo[1]
+                #print("id: ",temp_id, " values: ", temp_values)
                 characters[temp_id] = temp_values
                 line =  ""
             else:
@@ -73,6 +75,7 @@ def CHARACTERS(file, actual):
     return characters, actual
 
 def KEYWORDS(file, actual):
+    print("leyendo KEYWORDS")
     actual += 1
     temp = ""
     keywords = {}
@@ -97,6 +100,7 @@ def KEYWORDS(file, actual):
     return keywords, actual
 
 def TOKENS(file, actual):
+    print("leyendo TOKENS")
     actual += 1
     temp = ""
     tokens = {}
@@ -107,6 +111,9 @@ def TOKENS(file, actual):
         temp, actual = read_word(file, actual) 
         if temp == "PRODUCTIONS":
             actual -= 11
+            break
+        if temp == "END":
+            actual -= 3
             break
         line += temp
         if line[-1] == ".":

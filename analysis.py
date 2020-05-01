@@ -8,9 +8,9 @@ from libs import graph
 
 import decomp
 
-RESERVED_WORDS = ["ANY", "CONTEXT", "IGNORE", "PRAGMAS", "TOKENS",\
-    "CHARACTERS", "END", "IGNORECASE", "PRODUCTIONS", "WEAK", "COMMENTS", \
-        "FROM", "NESTED", "SYNC", "COMPILER", "IF", "out", "TO"]
+OPERATORS = ['|', 'ξ']
+UNITARY = ['*', 'ψ', '?']
+RESERVED_WORDS = ["ANY", "CONTEXT", "IGNORE", "PRAGMAS", "TOKENS", "CHARACTERS", "END", "IGNORECASE", "PRODUCTIONS", "WEAK", "COMMENTS","FROM", "NESTED", "SYNC", "COMPILER", "IF", "out", "TO"]
 EPSILON  = "ε"
 
 def analyze(name, characters, keywords, tokens):
@@ -20,7 +20,7 @@ def analyze(name, characters, keywords, tokens):
     keyword_parse_lines = KEYWORDS(keywords, character_parse_lines)
     #print(keyword_parse_lines)
     token_parse_lines = TOKENS(tokens, character_parse_lines)
-    #print(token_parse_lines)
+    print(token_parse_lines)
     dfas, complete_line = make_tree(keyword_parse_lines, token_parse_lines)
     # Hacer automata
     #dfa = directo.directo(tree, complete_parse_line)
@@ -34,6 +34,7 @@ def analyze(name, characters, keywords, tokens):
 
 def CHARACTERS(characters):
     # empezando con characters.
+    print("analizando CHARACTERS")
     character_parse_line = {}
     for c in characters:
         temp_string = ""
@@ -41,7 +42,7 @@ def CHARACTERS(characters):
         i = 0
         string_to_parse = ""
         while i < len(characters[c]):
-            if characters[c][i] == '"':
+            if characters[c][i] == '"' or characters[c][i] == "'":
                 flag = not flag
                 if not flag:
                     temp_string = temp_string[:-1] + ")"
@@ -56,6 +57,21 @@ def CHARACTERS(characters):
             elif temp_string + characters[c][i] in character_parse_line:
                 string_to_parse += character_parse_line[temp_string+characters[c][i]]
                 temp_string = ""
+            elif temp_string == ".":
+                if characters[c][i] == ".":
+                    start = string_to_parse[-2]
+                    finish = ""
+                    while i < len(characters[c]):
+                        if characters[c][i] == "'":
+                            break
+                        i += 1
+                    finish = characters[c][i + 1]
+                    j = ord(start)
+                    while j < ord(finish):
+                        string_to_parse += "|" + chr(j)
+                        j += 1
+                    string_to_parse += "|" + finish
+
             elif temp_string == "CHR(":
                 number = ""
                 while i < len(characters[c]):
@@ -77,6 +93,7 @@ def CHARACTERS(characters):
     return character_parse_line
 
 def KEYWORDS(keywords, character_parse_line):
+    print("analizando KEYWORDS")
     keyword_parse_lines = {}
     for k in keywords:
         word = keywords[k][:-1]
@@ -97,6 +114,7 @@ def KEYWORDS(keywords, character_parse_line):
     return(keyword_parse_lines)
 
 def TOKENS(tokens, characters):
+    print("analizando TOKENS")
     tokens_parse_lines = {}
     for t in tokens:
         token = tokens[t]
@@ -106,6 +124,7 @@ def TOKENS(tokens, characters):
         flag = False
         while i < len(token):
             temp += token[i]
+            print(temp)
             if temp in characters:
                 if flag:
                     parse_line += characters[temp] + ")*"
@@ -121,6 +140,16 @@ def TOKENS(tokens, characters):
                 temp = ""
             if temp == "}" and flag:
                 flag = not flag
+                temp = ""
+            if temp == "[":
+                second_flag = True
+                if parse_line != "":
+                    parse_line += "ξ"
+                parse_line += "("
+                temp = ""
+            if temp == "]":
+                second_flag = False
+                parse_line += "?"
                 temp = ""
             if temp == '"':
                 inner = ""
@@ -138,10 +167,13 @@ def TOKENS(tokens, characters):
                     parse_line += "ξ"
                 temp = ""
             i += 1
-            tokens_parse_lines[t] = parse_line
+        if parse_line[-1] in OPERATORS:
+            parse_line = parse_line[:-1]
+        tokens_parse_lines[t] = parse_line
     return tokens_parse_lines
 
 def make_tree(keyword_parse_lines, token_parse_lines):
+    print("haciendo arboles")
     complete_line = ""
     dfas = {}
     for keyword in keyword_parse_lines:
@@ -150,13 +182,16 @@ def make_tree(keyword_parse_lines, token_parse_lines):
         dfas[keyword] = directo.directo(tree, keyword_parse_lines[keyword])
     for token in token_parse_lines:
         complete_line += "(" + token_parse_lines[token] +")" + "|"
+        print(token, ": ", token_parse_lines[token])
         tree = trees.evaluate(token_parse_lines[token])
+        #trees.print2DUtil(tree, 0)
         dfas[token] = directo.directo(tree, token_parse_lines[token])
     complete_line = complete_line[:-1]
     tree = trees.evaluate(complete_line)
     return dfas, complete_line
 
 def make_one(dfas, complete_line):
+    print("haciendo el ARBOL")
     tree = trees.evaluate(complete_line)
     final_dfa = directo.directo(tree, complete_line)
     return final_dfa

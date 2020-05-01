@@ -13,6 +13,7 @@ def main():
     name, characters, keywords, tokens = decomp.main(data)
     final_dfa, dfas = analysis.analyze(name, characters, keywords, tokens)
     to_file.create(final_dfa, dfas, name)
+    print("Hecho archivo de nombre ", name)
     
 
 
