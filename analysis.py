@@ -20,12 +20,12 @@ def analyze(name, characters, keywords, tokens):
     keyword_parse_lines = KEYWORDS(keywords, character_parse_lines)
     #print(keyword_parse_lines)
     token_parse_lines = TOKENS(tokens, character_parse_lines)
-    print(token_parse_lines)
+    #print(token_parse_lines)
     dfas, complete_line = make_tree(keyword_parse_lines, token_parse_lines)
     # Hacer automata
     #dfa = directo.directo(tree, complete_parse_line)
     final_dfa = make_one(dfas, complete_line)
-    #graph.graph(final_dfa, "nani")
+    graph.graph(final_dfa, "nani")
     #resp = evaluate.is_in_language(final_dfa, "nani")
 
     return final_dfa, dfas
